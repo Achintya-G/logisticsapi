@@ -1,0 +1,61 @@
+
+  {
+    "booking_id": 1001,
+    "customer_id": 1,
+    "agent_id": 1,
+
+    "buyer": "ABC Imports",
+    "buyer_address": "789 Buyer Lane, Chennai",
+    "seller": "XYZ Exports",
+    "seller_address": "321 Seller Street, Kolkata",
+    "notify_party": "Notify Logistics",
+    "notify_party_address": "888 Notify Ave, Bengaluru",
+
+    "type_of_shipping": "FCL",
+    "date_of_booking": "2025-06-20",
+    "no_of_units": 10,
+    "gross_weight": 2000.0,
+    "net_weight": 1800.0,
+    "volume": 12.5,
+
+    "port_of_origin": "Nhava Sheva",
+    "port_of_destination": "Port of Hamburg",
+    "final_destination": "Berlin Warehouse",
+    "delivery_warehouse": "Local Storage 1",
+
+    "vessel": "Vessel Titan",
+    "carrier": "Maersk",
+    "voyage_number": "MV1234",
+
+    "ETD": "2025-06-22",
+    "ETA": "2025-07-10",
+    "status": "Booked",
+
+    "mode_of_transport": "Sea",
+    "INCO_term": "FOB",
+
+    "marks_and_numbers": "MARK123",
+    "item_description": "Textile Machinery",
+    "container": "CONT0012345",
+    "igm_number": "IGM123456",
+    "igm_date": "2025-06-21",
+    "item_number": "01",
+    "sub_item_number": "A",
+
+    "OBL": "OBL987654",
+    "HBL": "HBL123456",
+
+    "invoice_no": "INV567890",
+    "irn_no": "IRN998877",
+    "charges": [
+      {
+        "charge_name":"Shipping",
+        "amount": 10000
+      },
+      {
+        "charge_name":"Handling",
+        "amount": 2500
+      }
+    ],
+    "payment_due_date": "2025-07-20"
+  }

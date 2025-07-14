@@ -1,0 +1,73 @@
+CREATE TABLE Customers (
+  c_id SERIAL PRIMARY KEY,
+  customer_id TEXT,
+  address TEXT,
+  gst_id TEXT,
+  gst_doc TEXT,
+  outstanding_dues REAL
+);
+
+CREATE TABLE Agents (
+  agent_id SERIAL PRIMARY KEY,
+  agent_name TEXT,
+  address TEXT,
+  list_of_docs JSONB,
+  outstanding_dues REAL
+);
+
+CREATE TABLE Bookings (
+  booking_id SERIAL PRIMARY KEY,
+  customer_id INTEGER,
+  agent_id INTEGER,
+  
+  buyer TEXT NOT NULL,
+  buyer_address TEXT NOT NULL,
+  seller TEXT NOT NULL,
+  seller_address TEXT NOT NULL,
+  notify_party TEXT NOT NULL,
+  notify_party_address TEXT NOT NULL,
+
+  type_of_shipping TEXT NOT NULL,
+
+  date_of_booking DATE NOT NULL,
+  no_of_units INTEGER NOT NULL,
+  gross_weight REAL NOT NULL,
+  net_weight REAL,
+  volume REAL NOT NULL,
+
+  port_of_origin TEXT NOT NULL,
+  port_of_destination TEXT NOT NULL,
+  final_destination TEXT NOT NULL,
+  delivery_warehouse TEXT,
+  vessel TEXT NOT NULL,
+  carrier TEXT NOT NULL,
+  voyage_number TEXT NOT NULL,
+  ETD DATE,
+  ETA DATE,
+  ATD DATE,
+  ATA DATE,
+  unstuff_date DATE,
+  status TEXT,
+
+  mode_of_transport TEXT,
+  INCO_term TEXT NOT NULL,
+
+  marks_and_numbers TEXT,
+  item_description TEXT,
+  container TEXT NOT NULL,
+  igm_number TEXT NOT NULL,
+  igm_date DATE,
+  item_number TEXT,
+  sub_item_number TEXT,
+
+  OBL TEXT,
+  HBL TEXT,
+
+  invoice_no TEXT NOT NULL,
+  irn_no TEXT,
+  charges TEXT[],
+  payment_due_date DATE,
+
+  FOREIGN KEY (customer_id) REFERENCES Customers(c_id),
+  FOREIGN KEY (agent_id) REFERENCES Agents(agent_id)
+);

@@ -1,0 +1,9 @@
+
+{
+    "c_id": 1,
+    "customer_id": "CUST001",
+    "address": "123 Example Street, Mumbai",
+    "gst_id": "27ABCDE1234F1Z5",
+    "gst_doc": "gst_doc_001.pdf",
+    "outstanding_dues": 12000.50
+}

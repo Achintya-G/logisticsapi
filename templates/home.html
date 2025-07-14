@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="{{ url_for('static', filename='postheader.js') }}"></script>
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome{% if username %}, {{ username }}{% endif %}!</h1>
+    <button id="protectedBtn">Go to Protected Page</button>
+    <div id="protectedResult"></div>
+    <br>
+    <a href="{{ url_for('login') }}">Login</a> | 
+    <a href="{{ url_for('register') }}">Register</a>
+    <script>
+        document.getElementById('protectedBtn').onclick = function() {
+            callApiWithAuth('/protected')
+            .then(data => {
+                document.getElementById('protectedResult').innerText = data.message;
+                console.log('Protected data:', data);
+            });
+        }
+    </script>
+</body>
+</html>

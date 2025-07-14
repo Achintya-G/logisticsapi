@@ -1,0 +1,8 @@
+
+{
+    "agent_id": 123,
+    "agent_name": "Global Transports",
+    "address": "456 Agent Road, Delhi",
+    "list_of_docs": ["hi","works"],
+    "outstanding_dues": 500.0
+}
