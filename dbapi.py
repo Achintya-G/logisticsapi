@@ -3,7 +3,8 @@ The sturcture of this code is kind of what i want to be consistent through all t
 
 -import libraries
 -set constants and global stuff
--define the functions that will be called (User defined function)(Focus on making the functions simpler to understand and name them as such and dont make a function to complex)
+-define the functions that will be called (User defined function)
+ (Focus on making the functions simpler to understand and name them as such and dont make a function to complex)
 -define the api endpoints and the corresponding function (api function)
 then that last part to actually run the api 
 
@@ -16,15 +17,13 @@ also when making the api function (that is the function right below the "db_api.
 make sure u write the bare minimum code and rather do anything in the user defined functions ( functions written before the db_api.route stuff)
 to make it easier to read and understand 
 
-
-
-
-
 '''
 
-
+from data_validator import check_json_against_schema
 from flask import Flask, request
 import psycopg2
+
+SCHEMA_FILE_PATH = "schema.txt"
 
 db_api = Flask(__name__)
 
@@ -81,11 +80,11 @@ def validate_data(data:dict,table=None):
     print(data)
     match table:
         case "agent":
-            print("")
+            return check_json_against_schema(SCHEMA_FILE_PATH,"Agents",data)
         case "customer":
-            print("")
+            return check_json_against_schema(SCHEMA_FILE_PATH,"Customers",data)
         case "booking":
-            print("")
+            return check_json_against_schema(SCHEMA_FILE_PATH,"Bookings",data)
         case None: # Testing case please delete lateer
             for i in data.keys():
                 print(f"{i}:{data[i]}({type(data[i])})")
@@ -188,7 +187,7 @@ def interact_booking():
         return "Booking updated sucessfully."
     elif request.method == 'DELETE':
 
-        return "Booking delted sucessfully."
+        return "Booking deleted sucessfully."
 
     return 'make a valid request to this endpoint'
 
