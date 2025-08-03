@@ -17,6 +17,9 @@ also when making the api function (that is the function right below the "db_api.
 make sure u write the bare minimum code and rather do anything in the user defined functions ( functions written before the db_api.route stuff)
 to make it easier to read and understand 
 
+
+also all the endpoints will get most of the arguments in json
+
 '''
 
 from data_validator import check_json_against_schema
@@ -44,7 +47,11 @@ def insert_into_table(table,data):
     
     match table:
         case "agent":
-            pass
+            if validate_data(data,"agent"):
+                #write code to insert data in database and return like true or sumn
+                pass
+            else:
+                raise Warning.add_note("Invalid data") 
         case "customer":
             print("")
         case "booking":
@@ -56,7 +63,11 @@ def update_record_in_table(table,data):
 
     match table:
         case "agent":
-            print("")
+            if validate_data(data,"agent"):
+                #write code to update data in database and return like true or sumn
+                pass
+            else:
+                raise Warning.add_note("Invalid data") 
         case "customer":
             print("")
         case "booking":
@@ -68,7 +79,11 @@ def delete_from_table(table,data):
 
     match table:
         case "agent":
-            print("")
+            if validate_data(data,"agent"):
+                #write code to delete record from database and return like true or sumn
+                pass
+            else:
+                raise Warning.add_note("Invalid data") 
         case "customer":
             print("")
         case "booking":
@@ -95,7 +110,11 @@ def validate_data(data:dict,table=None):
 def search_data(data,table=None):
     match table:
         case "agent":
-            print("")
+            if validate_data(data,"agent"):
+                # search for records with macthing data and return list of records that match 
+                pass
+            else:
+                raise Warning.add_note("Invalid data") 
         case "customer":
             print("")
         case "booking":
@@ -186,7 +205,6 @@ def interact_booking():
     elif request.method == 'PUT':
         return "Booking updated sucessfully."
     elif request.method == 'DELETE':
-
         return "Booking deleted sucessfully."
 
     return 'make a valid request to this endpoint'
@@ -234,7 +252,7 @@ def test_func():
         if request.is_json == True:
             validate_data(data=request.get_json())
             pass
-        return "hiii test workde"
+       
 
 
 if __name__ == "__main__":
