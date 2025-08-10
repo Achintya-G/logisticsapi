@@ -251,7 +251,11 @@ def test_func():
     if request.method == 'POST':
         if request.is_json == True:
             validate_data(data=request.get_json())
+            return 0
             pass
+        else:
+            x = [i for i in request.form.items()] 
+            return x
        
 
 
