@@ -1,11 +1,15 @@
 import sqlite3
 import jwt
 import datetime
-from flask import Flask, render_template, url_for, request, jsonify, g, redirect, session
+from flask import Flask, render_template, url_for, request, jsonify, redirect, session
+import requests
+import json
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key_here'  # Change this to a strong secret!
+
+DB_API_URL = "http://127.0.0.1:5001/" # THIS ONE IS VERY TEMPORARY CHANGE IT WHEN YOU FIGURE OUT HOSTING
 
 
 # aight boss this one is lowkey ass but it does the job if yall can refer to the dbapi.py and structure this and make this better itll be good
@@ -13,8 +17,7 @@ app.config['SECRET_KEY'] = 'your_secret_key_here'  # Change this to a strong sec
 # yea the dbapi.py is simpler and easier to understand structure use that as a reference
 # also i used sqlite3 when making but let that be for now we can change it later or talk to me if u changing it
 
-
-def generate_token(username):
+def generate_token(username) -> str:
     payload = {
         'username': username,
         'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=15)
@@ -23,13 +26,15 @@ def generate_token(username):
     print(f"Generated token: {token}")
     return token
 
-def verify_token(token):
+
+def verify_token(token) -> bool:
     print(f"Verifying token: {token}")
     try:
         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        return payload['username']
+        return True
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
-        return None
+        return False
+
 
 def validate_user(username, password):
     conn = sqlite3.connect('database.db')
@@ -38,7 +43,7 @@ def validate_user(username, password):
     user = cursor.fetchone()
     conn.close()
     return user is not None
-
+    
 
 def register_user(username, password):
     conn = sqlite3.connect('database.db')
@@ -95,9 +100,10 @@ def gentoken():
         print(i)
     if request.method == 'POST':
 
-        username = request.form.get('username')
-        
-        password = request.form.get('password')
+        username = request.json['username']
+        password = request.json['password']
+
+
         print("usernaem:",username)
         print("password:",password)
         
@@ -113,6 +119,20 @@ def vertoken():
         if verify_token(request.headers.get('authtoken')):
             return 'valid token'
     return 'sumn went wrong'
+
+
+@app.route('/db', methods = ['POST'])
+def db_api_call():
+
+    auth_token = request.headers.get('authtoken')
+    
+    if request.method == 'POST' and verify_token(auth_token) and request.is_json:
+        print(type(request.json))
+        print()
+        return 'sumn data was recievd'
+    
+    return 'give authtoken'
+    pass
 
 
 if __name__ == "__main__":

@@ -30,6 +30,8 @@ SCHEMA_FILE_PATH = "schema.txt"
 
 db_api = Flask(__name__)
 
+
+## CALL THIS FUNCTION ONCE BEFORE RUNNING THE REST
 def create_db_from_schema():
     conn = psycopg2.connect(dbname="trial",user="postgres",password="root")
     cur = conn.cursor()
@@ -251,11 +253,13 @@ def test_func():
     if request.method == 'POST':
         if request.is_json == True:
             validate_data(data=request.get_json())
-            return 0
-            pass
-        else:
-            x = [i for i in request.form.items()] 
-            return x
+            return 'Data recieved'
+            
+    elif request.method == 'GET':
+        if request.is_json == True:
+            validate_data(data=request.get_json())
+            return 'Here is sumn u requested'
+        
        
 
 
