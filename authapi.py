@@ -20,7 +20,7 @@ DB_API_URL = "http://127.0.0.1:5001/" # THIS ONE IS VERY TEMPORARY CHANGE IT WHE
 def generate_token(username) -> str:
     payload = {
         'username': username,
-        'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=15)
+        'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=100)
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     print(f"Generated token: {token}")
@@ -59,47 +59,64 @@ def register_user(username, password):
 
 
 
-# 3 mains routes are here that actually have a webpage
+# 3 mains routes are here that actually have a webpage gotta remove these   
 
 @app.route('/')
 def home():
     username = session.get('username')
-    return render_template('home.html', username=username)
+    return '''
+    The following endpoints are accesible
+    <ul>
+    <li>/login [POST]</li>
+    <li>/register [POST]</li>
+    <li>/db</li>
+    </ul>
+    '''
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
+    '''
+    Send a POST request with keys 'username' and 'password' in json body to recieve token
+    '''
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if validate_user(username, password):
-            token = generate_token(username)
-            session['token'] = token  # Store token in session
-            session['username'] = username
-            return redirect(url_for('home'))
-        else:
-            return render_template('login.html', error='Invalid credentials')
-    return render_template('login.html')
 
-@app.route('/register', methods=['GET', 'POST'])
+        username = request.json['username']
+        password = request.json['password']
+
+        if validate_user(username, password):
+            data = {'token' : generate_token(username)}
+            return data,200
+        else:
+            return {'error' : "Invalid credentials"},401
+    else :
+        return {'error' : "Invalid method"},405
+
+@app.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+        '''
+        Send a POST request with keys 'username' and 'password' in json body to register
+        '''
+        
+        username = request.json['username']
+        password = request.json['password']
+
         if register_user(username, password):
-            return jsonify({'success': True, 'message': 'Registration successful'})
+            return {'success': True, 'message': 'Registration successful'},200
         else:
-            return jsonify({'success': False, 'message': 'Username already exists'}), 409
-    return render_template('register.html')
+            return {'success': False, 'message': 'Username already exists'},409
+    else :
+        return {'error' : "Invalid method"},405
 
-#REMOVE GENTOKEN AND VERTOKEN AFTER DEV (these were for testing if the token thing works) 
 
-@app.route('/gentoken', methods=['POST'])
+#REMOVE GENTOKEN AND VERTOKEN AFTER DEV (these were for testing if the token thing works)
+
+@app.route('/gentoken', methods=['POST']) ## the login api does the exact same thing now ill remove this later
 def gentoken():
     for i in request.form.items(): 
         print(i)
     if request.method == 'POST':
-
         username = request.json['username']
         password = request.json['password']
 
@@ -112,6 +129,7 @@ def gentoken():
             return token , "\n this is your token."
     return "INVALID REQUEST"
 
+
 @app.route('/vertoken', methods = ['POST'])
 def vertoken():
     print("this is the header:\n",dict(request.headers))
@@ -121,8 +139,11 @@ def vertoken():
     return 'sumn went wrong'
 
 
-@app.route('/db', methods = ['POST'])
+@app.route('/db', methods = ['GET','POST'])
 def db_api_call():
+
+    ## FINISH THE DB FUNCTIONS AND COME BACK TO THIS
+
 
     auth_token = request.headers.get('authtoken')
     
@@ -132,11 +153,9 @@ def db_api_call():
         return 'sumn data was recievd'
     
     return 'give authtoken'
-    pass
 
 
 if __name__ == "__main__":
-    # Create users table if it doesn't exist
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     cursor.execute('''

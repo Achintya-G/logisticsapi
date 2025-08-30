@@ -3,13 +3,14 @@ from flask import Flask, request ,send_file
 
 docgen_api = Flask(__name__)
 
-def generateInvoice():
+def generateInvoice(data):  #this function should be imported
+
+
     
-    #generate document and save it
+    #generate document using the data and save it
     filepath = "/generatedDocuments/invoice567.pdf"
 
     return filepath
-    pass
 
 def invoicegen(bookingno):
     # get details using booking number

@@ -28,7 +28,6 @@ def parse_sql_schema(file_path:str) -> dict:
     
     with open(file_path, 'r') as f:
         content = f.read()
-    # idek how this works bro regex is scary.
     tables = []
     table_blocks = re.findall(r'CREATE TABLE\s+(\w+)\s*\((.*?)\);', content, re.DOTALL | re.IGNORECASE)
 

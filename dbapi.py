@@ -30,8 +30,7 @@ SCHEMA_FILE_PATH = "schema.txt"
 
 db_api = Flask(__name__)
 
-
-## CALL THIS FUNCTION ONCE BEFORE RUNNING THE REST
+## RUN THIS FUNCTION ONCE BEFORE RUNNING THIS FILE AND UTILIZE THE DATABASE CREATED FOR ANY OPERATIONS
 def create_db_from_schema():
     conn = psycopg2.connect(dbname="trial",user="postgres",password="root")
     cur = conn.cursor()
@@ -46,7 +45,6 @@ def create_db_from_schema():
 
 
 def insert_into_table(table,data):
-    
     match table:
         case "agent":
             if validate_data(data,"agent"):
@@ -59,10 +57,8 @@ def insert_into_table(table,data):
         case "booking":
             print("")
 
-    pass
 
 def update_record_in_table(table,data):
-
     match table:
         case "agent":
             if validate_data(data,"agent"):
@@ -75,10 +71,8 @@ def update_record_in_table(table,data):
         case "booking":
             print("")
 
-    pass
 
 def delete_from_table(table,data):
-
     match table:
         case "agent":
             if validate_data(data,"agent"):
@@ -90,8 +84,7 @@ def delete_from_table(table,data):
             print("")
         case "booking":
             print("")
-    
-    pass
+
 
 def validate_data(data:dict,table=None):
     print(data)
@@ -102,11 +95,8 @@ def validate_data(data:dict,table=None):
             return check_json_against_schema(SCHEMA_FILE_PATH,"Customers",data)
         case "booking":
             return check_json_against_schema(SCHEMA_FILE_PATH,"Bookings",data)
-        case None: # Testing case please delete lateer
-            for i in data.keys():
-                print(f"{i}:{data[i]}({type(data[i])})")
-
-    return True
+        case _:
+            return False
 
 
 def search_data(data,table=None):
@@ -121,7 +111,6 @@ def search_data(data,table=None):
             print("")
         case "booking":
             print("")
-    pass
 
 
 
@@ -163,6 +152,8 @@ def specific_data():
     '''Endpoint that will be accessed by the user to get specific data.
     It will be used whenever a user queries something that is not written as a specific endpoint.
     the data that will be returned will be whatever the user requested as long as they have the permission to acess it'''
+
+
     return "This is a GET request to the specific data endpoint."
 
 
@@ -180,6 +171,9 @@ def interact_customer():
         return "Customer updated sucessfully."
     elif request.method == 'DELETE':
         return "Customer delted sucessfully."
+    else:
+        return 'make a valid request to this endpoint'
+    
      
 @db_api.route('/interact_agent',methods=['POST','PUT','DELETE'])
 def interact_agent():
@@ -192,10 +186,9 @@ def interact_agent():
         return "Agent updated sucessfully."
     elif request.method == 'DELETE':
         return "Agent delted sucessfully."    
-
-
-    return None
-
+    else:
+        return 'make a valid request to this endpoint'
+    
 
 @db_api.route('/interact_booking',methods=['POST','PUT','DELETE'])
 def interact_booking():
@@ -208,8 +201,9 @@ def interact_booking():
         return "Booking updated sucessfully."
     elif request.method == 'DELETE':
         return "Booking deleted sucessfully."
+    else:
+        return 'make a valid request to this endpoint'
 
-    return 'make a valid request to this endpoint'
 
 
 ### SEARCH ENDPOINTS (yall gonna have to figure out how to make search and think about what data might be given for a search)       
@@ -251,13 +245,11 @@ def test_func():
     '''Endpoint for testing'''
 
     if request.method == 'POST':
-        if request.is_json == True:
-            validate_data(data=request.get_json())
+        if request.is_json == True and validate_data(data=request.get_json()):
             return 'Data recieved'
             
     elif request.method == 'GET':
-        if request.is_json == True:
-            validate_data(data=request.get_json())
+        if request.is_json == True and validate_data(data=request.get_json()):
             return 'Here is sumn u requested'
         
        
